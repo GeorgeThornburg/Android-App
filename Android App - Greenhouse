@@ -1,0 +1,112 @@
+/*
+ * Copyright (c) 2015-present, Parse, LLC.
+ * All rights reserved.
+ *
+ * This source code is licensed under the BSD-style license found in the
+ * LICENSE file in the root directory of this source tree. An additional grant
+ * of patent rights can be found in the PATENTS file in the same directory.
+ */
+package com.parse.starter;
+import android.content.Intent;
+import android.graphics.BitmapFactory;
+import android.os.Bundle;
+import android.os.Handler;
+import android.support.v7.app.AppCompatActivity;
+import android.util.Base64;
+import android.view.View;
+import android.widget.Button;
+import android.widget.ImageView;
+import android.widget.TextView;
+import android.widget.Toast;
+import com.parse.GetCallback;
+import com.parse.ParseAnalytics;
+import com.parse.ParseException;
+import com.parse.ParseObject;
+import com.parse.ParseQuery;
+
+public class MainActivity extends AppCompatActivity {
+
+
+   @Override
+   public void onCreate(Bundle savedInstanceState) {
+     super.onCreate(savedInstanceState);
+     setContentView(R.layout.activity_main);
+
+
+
+                       final Handler handler = new Handler();
+                       final Runnable myRunnable = new Runnable() {
+                       @Override
+                       public void run() {
+                       handler.postDelayed(this, 5000);
+                       final Button button = (Button) findViewById(R.id.settingsButton);
+                       final ImageView myImageView = (ImageView) findViewById(R.id.imageView);
+                       final TextView myTextView2 = (TextView) findViewById(R.id.textViewHumid);
+                       final TextView myTextView3 = (TextView) findViewById(R.id.textViewC02);
+                       final TextView myTextView5 = (TextView) findViewById(R.id.textViewTemp);
+                       final TextView myTextView6 = (TextView) findViewById(R.id.textViewBlackLight);
+                       final TextView myTextView7 = (TextView) findViewById(R.id.textViewGrowLight);
+                       final TextView myTextView8 = (TextView) findViewById(R.id.textViewSoil);
+                       final TextView myTextView9 = (TextView) findViewById(R.id.textViewFreshAir);
+                       final TextView myTextView4 = (TextView) findViewById(R.id.time);
+
+                       final ParseQuery<ParseObject> query = ParseQuery.getQuery("Greenhouse");
+                       query.getInBackground("CukTtkNoFt", new GetCallback<ParseObject>() {
+                           @Override
+                           public void done(ParseObject object, ParseException e) {
+                               if (e == null) {
+                                   myTextView5.setText(("Temp:  ") + (String.valueOf(object.getInt("currentTemp"))));
+                                   myTextView2.setText(("Humid: ") + (String.valueOf(object.getInt("currentHumid"))));
+                                   myTextView3.setText(("CO2:     " ) + (String.valueOf(object.getInt("currentCO2"))));
+                                   myTextView4.setText(("Time: " ) + (String.valueOf(object.getString("Time"))));
+                                   myTextView6.setText(("Black Light: " ) + (String.valueOf(object.getInt("setBLightOn"))) + (" - ") + (String.valueOf(object.getInt("setBLightOff"))));
+                                   myTextView7.setText(("Grow Light: "  ) + (String.valueOf(object.getInt("setLightOn"))) + (" - ") + (String.valueOf(object.getInt("setLightOff"))));
+                                   myTextView8.setText(("Soil: " ) + (String.valueOf(object.getInt("currentTemp"))));
+                                   myTextView9.setText(("Fresh Air On: ")  + (String.valueOf(object.getInt("currentTemp"))));
+                                   byte[] imageAsBytes = Base64.decode(object.getString("pic").getBytes(), Base64.DEFAULT);
+                                   myImageView.setImageBitmap(BitmapFactory.decodeByteArray(imageAsBytes, 0, imageAsBytes.length));
+                                   button.setOnClickListener(new View.OnClickListener(){
+                                       @Override
+                                       public void onClick(View view) {
+                                           openActivity2();
+                                           //Toast.makeText(MainActivity.this, "Server is Down!", Toast.LENGTH_LONG).show();
+                                       }
+                                   });
+
+
+
+
+
+
+                                   //object.put("Score", 70);
+                                   //object.saveInBackground();
+
+
+
+                               } else {
+                                   Toast.makeText(MainActivity.this, "Server is Down!", Toast.LENGTH_LONG).show();
+
+                               }
+                           }
+
+
+                       });
+                           }
+                       }; handler.postDelayed(myRunnable, 1000);
+
+
+
+
+
+       ParseAnalytics.trackAppOpenedInBackground(getIntent());
+
+
+
+  }
+    public void openActivity2() {
+        Intent intent = new Intent(this, Activity2.class);
+        startActivity(intent);
+    }
+
+
+}
