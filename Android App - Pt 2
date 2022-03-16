@@ -1,0 +1,852 @@
+package com.parse.starter;
+
+import android.os.Bundle;
+import android.support.v7.app.AppCompatActivity;
+import android.view.View;
+import android.widget.Button;
+import android.widget.EditText;
+import android.widget.Switch;
+import android.widget.Toast;
+
+import com.parse.GetCallback;
+import com.parse.ParseException;
+import com.parse.ParseObject;
+import com.parse.ParseQuery;
+
+public class Activity2 extends AppCompatActivity {
+
+    //object.put("Score", 70000);
+    //object.saveInBackground();
+    //Switch switch1, switch2, switch3, switch4, switch5, switch6, switch7;
+
+    @Override
+    protected void onCreate(Bundle savedInstanceState) {
+        super.onCreate(savedInstanceState);
+        setContentView(R.layout.activity_2);
+
+//################################## TEMP ##########################################
+        final Switch switch1 = (Switch) findViewById(R.id.switchTemp);
+        final EditText currentTempSet = (EditText) findViewById(R.id.currentTempSet);
+        final Button buttonPlusTemp = (Button) findViewById(R.id.buttonPlusTemp);
+        final Button buttonMinusTemp = (Button) findViewById(R.id.buttonMinusTemp);
+
+//################################# LIGHT #############################################
+        final Switch switch2 = (Switch) findViewById(R.id.switchLight);
+        final EditText currentLightOnSet = (EditText) findViewById(R.id.editcurrentLightOnSet);
+        final EditText currentLightOffSet = (EditText) findViewById(R.id.editcurrentLightOffSet);
+        final Button buttonPlusLightOn = (Button) findViewById(R.id.buttonPlusLightOn);
+        final Button buttonMinusLightOn = (Button) findViewById(R.id.buttonMinusLightOn);
+        final Button buttonPlusLightOff = (Button) findViewById(R.id.buttonPlusLightOff);
+        final Button buttonMinusLightOff = (Button) findViewById(R.id.buttonMinusLightOff);
+
+//################################ B. LIGHT ##########################################
+        final Switch switch3 = (Switch) findViewById(R.id.switchBLight);
+        final EditText currentBLightOnSet = (EditText) findViewById(R.id.editcurrentBOnSet);
+        final EditText currentBLightOffSet = (EditText) findViewById(R.id.editcurrentBOffSet);
+        final Button buttonPlusBLightOn = (Button) findViewById(R.id.buttonPlusBLightOn);
+        final Button buttonMinusBLightOn = (Button) findViewById(R.id.buttonMinusBLightOn);
+        final Button buttonPlusBLightOff = (Button) findViewById(R.id.buttonPlusBLightOff);
+        final Button buttonMinusBLightOff = (Button) findViewById(R.id.buttonMinusBLightOff);
+
+//############################### CO2 ###############################################
+        final Switch switch4 = (Switch) findViewById(R.id.switchCO2);
+        final EditText currentCO2Set = (EditText) findViewById(R.id.editcurrentCO2Set);
+        final Button buttonPlusCO2 = (Button) findViewById(R.id.buttonPlusCO2);
+        final Button buttonMinusCO2 = (Button) findViewById(R.id.buttonMinusCO2);
+
+//############################### SOIL ###############################################
+        final Switch switch5 = (Switch) findViewById(R.id.switchSoil);
+        final EditText currentSoilSet = (EditText) findViewById(R.id.editcurrentSoilSet);
+        final Button buttonPlusSoil = (Button) findViewById(R.id.buttonPlusSoil);
+        final Button buttonMinusSoil = (Button) findViewById(R.id.buttonMinusSoil);
+
+//############################### FA INTAKE ##########################################
+        final Switch switch6 = (Switch) findViewById(R.id.switchFA);
+        final EditText currentFAOnSet = (EditText) findViewById(R.id.editcurrentFASetOn);
+        final EditText currentFAOffSet = (EditText) findViewById(R.id.editcurrentFASetOff);
+        final Button buttonPlusFAOn = (Button) findViewById(R.id.buttonPlusFAOn);
+        final Button buttonMinusFAOn = (Button) findViewById(R.id.buttonMinusFAOn);
+        final Button buttonPlusFAOff = (Button) findViewById(R.id.buttonPlusFAOff);
+        final Button buttonMinusFAOff = (Button) findViewById(R.id.buttonMinusFAOff);
+
+//################################# HUMID #############################################
+        final Switch switch7 = (Switch) findViewById(R.id.switchHumid);
+        final EditText currentHumidSet = (EditText) findViewById(R.id.editcurrentHumiditySet);
+        final Button buttonPlusHumid = (Button) findViewById(R.id.buttonPlusHumidity);
+        final Button buttonMinusHumid = (Button) findViewById(R.id.buttonMinusHumidity);
+
+
+        
+
+
+
+        final ParseQuery<ParseObject> query = ParseQuery.getQuery("Greenhouse");
+        query.getInBackground("CukTtkNoFt", new GetCallback<ParseObject>() {
+            @Override
+            public void done(final ParseObject object, ParseException e) {
+                if (e == null) {
+
+                    //###############################  TEMP ####################################
+
+                    currentTempSet.setText((" ") + String.valueOf(object.getInt("setTemp")));
+                    int tempOnOff = object.getInt("tempOnOff");
+                    if (tempOnOff == 1) {
+                        switch1.setChecked(true);
+                    } else {
+                        switch1.setChecked(false);
+                    }
+
+                    switch1.setOnClickListener(new View.OnClickListener() {
+                        @Override
+                        public void onClick(View view) {
+
+                            String statusSwitch1;
+                            if (switch1.isChecked()) {
+                                statusSwitch1 = switch1.getTextOn().toString();
+                                object.put("tempOnOff", 1);
+                            } else {
+                                statusSwitch1 = switch1.getTextOff().toString();
+                                object.put("tempOnOff", 0);
+                            }
+                            object.put("index", 2);
+                            object.saveInBackground();
+                            Toast.makeText(Activity2.this, statusSwitch1, Toast.LENGTH_LONG).show();
+
+                        }
+
+
+                    });
+
+                    buttonPlusTemp.setOnClickListener(new View.OnClickListener() {
+                        @Override
+                        public void onClick(View view) {
+
+                            //String buttonPlus;
+                            if (buttonPlusTemp.isPressed()) {
+                                //clicked == true;
+                                Integer x = (object.getInt("setTemp"));
+                                Integer y = x + 1;
+                                object.put("setTemp", y);
+                                currentTempSet.setText((" ") + String.valueOf(object.getInt("setTemp")));
+                                Toast.makeText(Activity2.this, "This Button is working " + y, Toast.LENGTH_SHORT).show();
+                            } else {
+                                //statusSwitch1 = switch1.getTextOff().toString();
+                                //object.put("tempOnOff", "Off");
+                                //object.put("index", 1);
+                                //Toast.makeText(Activity2.this, buttonPlus, Toast.LENGTH_LONG).show();
+                            }
+                            object.put("index", 2);
+                            object.saveInBackground();
+                            //Toast.makeText(Activity2.this, buttonPlus, Toast.LENGTH_LONG).show();
+
+                            }
+
+
+                            });
+
+                    buttonMinusTemp.setOnClickListener(new View.OnClickListener() {
+                        @Override
+                        public void onClick(View view) {
+
+                            if (buttonMinusTemp.isPressed()) {
+                                //clicked == true;
+                                Integer x = (object.getInt("setTemp"));
+                                Integer y = x - 1;
+                                object.put("setTemp", y);
+                                currentTempSet.setText((" ") + String.valueOf(object.getInt("setTemp")));
+                                Toast.makeText(Activity2.this, "This Button is working " + y, Toast.LENGTH_SHORT).show();
+                                } else {
+                                //statusSwitch1 = switch1.getTextOff().toString();
+                                //object.put("tempOnOff", "Off");
+                                //object.put("index", 1);
+                                //Toast.makeText(Activity2.this, buttonPlus, Toast.LENGTH_LONG).show();
+                                }
+                            object.put("index", 2);
+                            object.saveInBackground();
+
+
+                        }
+
+                    });
+
+                    //######################## LIGHT #########################################
+
+                    currentLightOnSet.setText((" ") + String.valueOf(object.getInt("setLightOn")));
+                    currentLightOffSet.setText((" ") + String.valueOf(object.getInt("setLightOff")));
+                    int lightOnOff = object.getInt("lightOnOff");
+                    if (lightOnOff == 1) {
+                                switch2.setChecked(true);
+                            } else {
+                                switch2.setChecked(false);
+                            }
+                    switch2.setOnClickListener(new View.OnClickListener() {
+                        @Override
+                        public void onClick(View view) {
+
+                            String statusSwitch2;
+                            if (switch2.isChecked()) {
+                                statusSwitch2 = switch2.getTextOn().toString();
+                                object.put("lightOnOff", 1);
+
+
+                            } else {
+                                statusSwitch2 = switch2.getTextOff().toString();
+                                object.put("lightOnOff", 0);
+
+
+                            }
+                            object.put("index", 2);
+                            object.saveInBackground();
+                            Toast.makeText(Activity2.this, statusSwitch2, Toast.LENGTH_LONG).show();
+
+
+                        }
+                    });
+
+                    buttonPlusLightOn.setOnClickListener(new View.OnClickListener() {
+                        @Override
+                        public void onClick(View view) {
+
+                            //String buttonPlus;
+                            if (buttonPlusLightOn.isPressed()) {
+                                //clicked == true;
+                                Integer x = (object.getInt("setLightOn"));
+                                Integer y = x + 1;
+                                object.put("setLightOn", y);
+                                currentLightOnSet.setText((" ") + String.valueOf(object.getInt("setLightOn")));
+                                Toast.makeText(Activity2.this, "Light Button is working " + y, Toast.LENGTH_SHORT).show();
+                            } else {
+                                //statusSwitch1 = switch1.getTextOff().toString();
+                                //object.put("tempOnOff", "Off");
+                                //object.put("index", 1);
+                                //Toast.makeText(Activity2.this, buttonPlus, Toast.LENGTH_LONG).show();
+                            }
+                            object.put("index", 2);
+                            object.saveInBackground();
+                            //Toast.makeText(Activity2.this, buttonPlus, Toast.LENGTH_LONG).show();
+
+                        }
+
+
+                    });
+
+                    buttonMinusLightOn.setOnClickListener(new View.OnClickListener() {
+                        @Override
+                        public void onClick(View view) {
+
+                            if (buttonMinusLightOn.isPressed()) {
+                                //clicked == true;
+                                Integer x = (object.getInt("setLightOn"));
+                                Integer y = x - 1;
+                                object.put("setLightOn", y);
+                                currentLightOnSet.setText((" ") + String.valueOf(object.getInt("setLightOn")));
+                                Toast.makeText(Activity2.this, "This Button is working " + y, Toast.LENGTH_SHORT).show();
+                            } else {
+                                //statusSwitch1 = switch1.getTextOff().toString();
+                                //object.put("tempOnOff", "Off");
+                                //object.put("index", 1);
+                                //Toast.makeText(Activity2.this, buttonPlus, Toast.LENGTH_LONG).show();
+                            }
+                            object.put("index", 2);
+                            object.saveInBackground();
+
+
+                        }
+
+                    });
+
+                    buttonPlusLightOff.setOnClickListener(new View.OnClickListener() {
+                        @Override
+                        public void onClick(View view) {
+
+                            //String buttonPlus;
+                            if (buttonPlusLightOff.isPressed()) {
+                                //clicked == true;
+                                Integer x = (object.getInt("setLightOff"));
+                                Integer y = x + 1;
+                                object.put("setLightOff", y);
+                                currentLightOffSet.setText((" ") + String.valueOf(object.getInt("setLightOff")));
+                                Toast.makeText(Activity2.this, "This Button is working " + y, Toast.LENGTH_SHORT).show();
+                            } else {
+                                //statusSwitch1 = switch1.getTextOff().toString();
+                                //object.put("tempOnOff", "Off");
+                                //object.put("index", 1);
+                                //Toast.makeText(Activity2.this, buttonPlus, Toast.LENGTH_LONG).show();
+                            }
+                            object.put("index", 2);
+                            object.saveInBackground();
+                            //Toast.makeText(Activity2.this, buttonPlus, Toast.LENGTH_LONG).show();
+
+                        }
+
+
+                    });
+
+                    buttonMinusLightOff.setOnClickListener(new View.OnClickListener() {
+                        @Override
+                        public void onClick(View view) {
+
+                            if (buttonMinusLightOff.isPressed()) {
+                                //clicked == true;
+                                Integer x = (object.getInt("setLightOff"));
+                                Integer y = x - 1;
+                                object.put("setLightOff", y);
+                                currentLightOffSet.setText((" ") + String.valueOf(object.getInt("setLightOff")));
+                                Toast.makeText(Activity2.this, "This Button is working " + y, Toast.LENGTH_SHORT).show();
+                            } else {
+                                //statusSwitch1 = switch1.getTextOff().toString();
+                                //object.put("tempOnOff", "Off");
+                                //object.put("index", 1);
+                                //Toast.makeText(Activity2.this, buttonPlus, Toast.LENGTH_LONG).show();
+                            }
+                            object.put("index", 2);
+                            object.saveInBackground();
+
+
+                        }
+
+                    });
+
+                    //########################## BLACK LIGHT #################################
+
+                    currentBLightOnSet.setText((" ") + String.valueOf(object.getInt("setBLightOn")));
+                    currentBLightOffSet.setText((" ") + String.valueOf(object.getInt("setBLightOff")));
+                    int blightOnOff = object.getInt("blightOnOff");
+                    if (blightOnOff == 1) {
+                        switch3.setChecked(true);
+                    } else {
+                        switch3.setChecked(false);
+                    }
+                    switch3.setOnClickListener(new View.OnClickListener() {
+                        @Override
+                        public void onClick(View view) {
+
+                            String statusSwitch3;
+                            if (switch3.isChecked()) {
+                                statusSwitch3 = switch3.getTextOn().toString();
+                                object.put("blightOnOff", 1);
+
+
+                            } else {
+                                statusSwitch3 = switch3.getTextOff().toString();
+                                object.put("blightOnOff", 0);
+
+
+                            }
+                            object.put("index", 2);
+                            object.saveInBackground();
+                            Toast.makeText(Activity2.this, statusSwitch3, Toast.LENGTH_LONG).show();
+
+
+                        }
+                    });
+
+                    buttonPlusBLightOn.setOnClickListener(new View.OnClickListener() {
+                        @Override
+                        public void onClick(View view) {
+
+                            //String buttonPlus;
+                            if (buttonPlusBLightOn.isPressed()) {
+                                //clicked == true;
+                                Integer x = (object.getInt("setBLightOn"));
+                                Integer y = x + 1;
+                                object.put("setBLightOn", y);
+                                currentBLightOnSet.setText((" ") + String.valueOf(object.getInt("setBLightOn")));
+                                Toast.makeText(Activity2.this, "Light Button is working " + y, Toast.LENGTH_SHORT).show();
+                            } else {
+                                //statusSwitch1 = switch1.getTextOff().toString();
+                                //object.put("tempOnOff", "Off");
+                                //object.put("index", 1);
+                                //Toast.makeText(Activity2.this, buttonPlus, Toast.LENGTH_LONG).show();
+                            }
+                            object.put("index", 2);
+                            object.saveInBackground();
+                            //Toast.makeText(Activity2.this, buttonPlus, Toast.LENGTH_LONG).show();
+
+                        }
+
+
+                    });
+
+                    buttonMinusBLightOn.setOnClickListener(new View.OnClickListener() {
+                        @Override
+                        public void onClick(View view) {
+
+                            if (buttonMinusBLightOn.isPressed()) {
+                                //clicked == true;
+                                Integer x = (object.getInt("setBLightOn"));
+                                Integer y = x - 1;
+                                object.put("setBLightOn", y);
+                                currentBLightOnSet.setText((" ") + String.valueOf(object.getInt("setBLightOn")));
+                                Toast.makeText(Activity2.this, "This Button is working " + y, Toast.LENGTH_SHORT).show();
+                            } else {
+                                //statusSwitch1 = switch1.getTextOff().toString();
+                                //object.put("tempOnOff", "Off");
+                                //object.put("index", 1);
+                                //Toast.makeText(Activity2.this, buttonPlus, Toast.LENGTH_LONG).show();
+                            }
+                            object.put("index", 2);
+                            object.saveInBackground();
+
+
+                        }
+
+                    });
+
+                    buttonPlusBLightOff.setOnClickListener(new View.OnClickListener() {
+                        @Override
+                        public void onClick(View view) {
+
+                            //String buttonPlus;
+                            if (buttonPlusBLightOff.isPressed()) {
+                                //clicked == true;
+                                Integer x = (object.getInt("setBLightOff"));
+                                Integer y = x + 1;
+                                object.put("setBLightOff", y);
+                                currentBLightOffSet.setText((" ") + String.valueOf(object.getInt("setBLightOff")));
+                                Toast.makeText(Activity2.this, "This Button is working " + y, Toast.LENGTH_SHORT).show();
+                            } else {
+                                //statusSwitch1 = switch1.getTextOff().toString();
+                                //object.put("tempOnOff", "Off");
+                                //object.put("index", 1);
+                                //Toast.makeText(Activity2.this, buttonPlus, Toast.LENGTH_LONG).show();
+                            }
+                            object.put("index", 2);
+                            object.saveInBackground();
+                            //Toast.makeText(Activity2.this, buttonPlus, Toast.LENGTH_LONG).show();
+
+                        }
+
+
+                    });
+
+                    buttonMinusBLightOff.setOnClickListener(new View.OnClickListener() {
+                        @Override
+                        public void onClick(View view) {
+
+                            if (buttonMinusBLightOff.isPressed()) {
+                                //clicked == true;
+                                Integer x = (object.getInt("setBLightOff"));
+                                Integer y = x - 1;
+                                object.put("setBLightOff", y);
+                                currentBLightOffSet.setText((" ") + String.valueOf(object.getInt("setBLightOff")));
+                                Toast.makeText(Activity2.this, "This Button is working " + y, Toast.LENGTH_SHORT).show();
+                            } else {
+                                //statusSwitch1 = switch1.getTextOff().toString();
+                                //object.put("tempOnOff", "Off");
+                                //object.put("index", 1);
+                                //Toast.makeText(Activity2.this, buttonPlus, Toast.LENGTH_LONG).show();
+                            }
+                            object.put("index", 2);
+                            object.saveInBackground();
+
+
+                        }
+
+                    });
+
+                    //############################### CO2 ########################################
+
+                    currentCO2Set.setText((" ") + String.valueOf(object.getInt("setCO2")));
+                    int Co2OnOff = object.getInt("co2OnOff");
+                    if (Co2OnOff == 1) {
+                        switch4.setChecked(true);
+                    } else {
+                        switch4.setChecked(false);
+                    }
+
+                    switch4.setOnClickListener(new View.OnClickListener() {
+                        @Override
+                        public void onClick(View view) {
+
+                            String statusSwitch4;
+                            if (switch4.isChecked()) {
+                                statusSwitch4 = switch4.getTextOn().toString();
+                                object.put("co2OnOff", 1);
+                            } else {
+                                statusSwitch4 = switch4.getTextOff().toString();
+                                object.put("co2OnOff", 0);
+                            }
+                            object.put("index", 2);
+                            object.saveInBackground();
+                            Toast.makeText(Activity2.this, statusSwitch4, Toast.LENGTH_LONG).show();
+
+                        }
+
+
+                    });
+
+                    buttonPlusCO2.setOnClickListener(new View.OnClickListener() {
+                        @Override
+                        public void onClick(View view) {
+
+                            //String buttonPlus;
+                            if (buttonPlusCO2.isPressed()) {
+                                //clicked == true;
+                                Integer x = (object.getInt("setCO2"));
+                                Integer y = x + 1;
+                                object.put("setCO2", y);
+                                currentCO2Set.setText((" ") + String.valueOf(object.getInt("setCO2")));
+                                Toast.makeText(Activity2.this, "This Button is working " + y, Toast.LENGTH_SHORT).show();
+                            } else {
+                                //statusSwitch1 = switch1.getTextOff().toString();
+                                //object.put("tempOnOff", "Off");
+                                //object.put("index", 1);
+                                //Toast.makeText(Activity2.this, buttonPlus, Toast.LENGTH_LONG).show();
+                            }
+                            object.put("index", 2);
+                            object.saveInBackground();
+                            //Toast.makeText(Activity2.this, buttonPlus, Toast.LENGTH_LONG).show();
+
+                        }
+
+
+                    });
+
+                    buttonMinusCO2.setOnClickListener(new View.OnClickListener() {
+                        @Override
+                        public void onClick(View view) {
+
+                            if (buttonMinusCO2.isPressed()) {
+                                //clicked == true;
+                                Integer x = (object.getInt("setCO2"));
+                                Integer y = x - 1;
+                                object.put("setCO2", y);
+                                currentCO2Set.setText((" ") + String.valueOf(object.getInt("setCO2")));
+                                Toast.makeText(Activity2.this, "This Button is working " + y, Toast.LENGTH_SHORT).show();
+                            } else {
+                                //statusSwitch1 = switch1.getTextOff().toString();
+                                //object.put("tempOnOff", "Off");
+                                //object.put("index", 1);
+                                //Toast.makeText(Activity2.this, buttonPlus, Toast.LENGTH_LONG).show();
+                            }
+                            object.put("index", 2);
+                            object.saveInBackground();
+
+
+                        }
+
+                    });
+
+
+                    //###########################   SOIL MOISTURE   #############################
+
+                    currentSoilSet.setText((" ") + String.valueOf(object.getInt("setSM")));
+                    int smOnOff = object.getInt("smOnOff");
+                    if (smOnOff == 1) {
+                        switch5.setChecked(true);
+                    } else {
+                        switch5.setChecked(false);
+                    }
+
+                    switch5.setOnClickListener(new View.OnClickListener() {
+                        @Override
+                        public void onClick(View view) {
+
+                            String statusSwitch5;
+                            if (switch5.isChecked()) {
+                                statusSwitch5 = switch5.getTextOn().toString();
+                                object.put("smOnOff", 1);
+                            } else {
+                                statusSwitch5 = switch5.getTextOff().toString();
+                                object.put("smOnOff", 0);
+                            }
+                            object.put("index", 2);
+                            object.saveInBackground();
+                            Toast.makeText(Activity2.this, statusSwitch5, Toast.LENGTH_LONG).show();
+
+                        }
+
+
+                    });
+
+                    buttonPlusSoil.setOnClickListener(new View.OnClickListener() {
+                        @Override
+                        public void onClick(View view) {
+
+                            //String buttonPlus;
+                            if (buttonPlusSoil.isPressed()) {
+                                //clicked == true;
+                                Integer x = (object.getInt("setSM"));
+                                Integer y = x + 1;
+                                object.put("setSM", y);
+                                currentSoilSet.setText((" ") + String.valueOf(object.getInt("setSM")));
+                                Toast.makeText(Activity2.this, "This Button is working " + y, Toast.LENGTH_SHORT).show();
+                            } else {
+                                //statusSwitch1 = switch1.getTextOff().toString();
+                                //object.put("tempOnOff", "Off");
+                                //object.put("index", 1);
+                                //Toast.makeText(Activity2.this, buttonPlus, Toast.LENGTH_LONG).show();
+                            }
+                            object.put("index", 2);
+                            object.saveInBackground();
+                            //Toast.makeText(Activity2.this, buttonPlus, Toast.LENGTH_LONG).show();
+
+                        }
+
+
+                    });
+
+                    buttonMinusSoil.setOnClickListener(new View.OnClickListener() {
+                        @Override
+                        public void onClick(View view) {
+
+                            if (buttonMinusSoil.isPressed()) {
+                                //clicked == true;
+                                Integer x = (object.getInt("setSM"));
+                                Integer y = x - 1;
+                                object.put("setSM", y);
+                                currentSoilSet.setText((" ") + String.valueOf(object.getInt("setSM")));
+                                Toast.makeText(Activity2.this, "This Button is working " + y, Toast.LENGTH_SHORT).show();
+                            } else {
+                                //statusSwitch1 = switch1.getTextOff().toString();
+                                //object.put("tempOnOff", "Off");
+                                //object.put("index", 1);
+                                //Toast.makeText(Activity2.this, buttonPlus, Toast.LENGTH_LONG).show();
+                            }
+                            object.put("index", 2);
+                            object.saveInBackground();
+
+
+                        }
+
+                    });
+
+                    //########################## FRESH AIR INTAKE #############################
+
+                    currentFAOnSet.setText((" ") + String.valueOf(object.getInt("setFATime")));
+                    currentFAOffSet.setText((" ") + String.valueOf(object.getInt("setFAOn")));
+                    int faOnOff = object.getInt("faOnOff");
+                    if (faOnOff == 1) {
+                        switch6.setChecked(true);
+                    } else {
+                        switch6.setChecked(false);
+                    }
+                    switch6.setOnClickListener(new View.OnClickListener() {
+                        @Override
+                        public void onClick(View view) {
+
+                            String statusSwitch6;
+                            if (switch6.isChecked()) {
+                                statusSwitch6 = switch6.getTextOn().toString();
+                                object.put("faOnOff", 1);
+
+
+                            } else {
+                                statusSwitch6 = switch6.getTextOff().toString();
+                                object.put("faOnOff", 0);
+
+
+                            }
+                            object.put("index", 2);
+                            object.saveInBackground();
+                            Toast.makeText(Activity2.this, statusSwitch6, Toast.LENGTH_LONG).show();
+
+
+                        }
+                    });
+
+                    buttonPlusFAOn.setOnClickListener(new View.OnClickListener() {
+                        @Override
+                        public void onClick(View view) {
+
+                            //String buttonPlus;
+                            if (buttonPlusFAOn.isPressed()) {
+                                //clicked == true;
+                                Integer x = (object.getInt("setFATime"));
+                                Integer y = x + 1;
+                                object.put("setFATime", y);
+                                currentFAOnSet.setText((" ") + String.valueOf(object.getInt("setFATime")));
+                                Toast.makeText(Activity2.this, "Light Button is working " + y, Toast.LENGTH_SHORT).show();
+                            } else {
+                                //statusSwitch1 = switch1.getTextOff().toString();
+                                //object.put("tempOnOff", "Off");
+                                //object.put("index", 1);
+                                //Toast.makeText(Activity2.this, buttonPlus, Toast.LENGTH_LONG).show();
+                            }
+                            object.put("index", 2);
+                            object.saveInBackground();
+                            //Toast.makeText(Activity2.this, buttonPlus, Toast.LENGTH_LONG).show();
+
+                        }
+
+
+                    });
+
+                    buttonMinusFAOn.setOnClickListener(new View.OnClickListener() {
+                        @Override
+                        public void onClick(View view) {
+
+                            if (buttonMinusFAOn.isPressed()) {
+                                //clicked == true;
+                                Integer x = (object.getInt("setFATime"));
+                                Integer y = x - 1;
+                                object.put("setFATime", y);
+                                currentFAOnSet.setText((" ") + String.valueOf(object.getInt("setFATime")));
+                                Toast.makeText(Activity2.this, "This Button is working " + y, Toast.LENGTH_SHORT).show();
+                            } else {
+                                //statusSwitch1 = switch1.getTextOff().toString();
+                                //object.put("tempOnOff", "Off");
+                                //object.put("index", 1);
+                                //Toast.makeText(Activity2.this, buttonPlus, Toast.LENGTH_LONG).show();
+                            }
+                            object.put("index", 2);
+                            object.saveInBackground();
+
+
+                        }
+
+                    });
+
+                    buttonPlusFAOff.setOnClickListener(new View.OnClickListener() {
+                        @Override
+                        public void onClick(View view) {
+
+                            //String buttonPlus;
+                            if (buttonPlusFAOff.isPressed()) {
+                                //clicked == true;
+                                Integer x = (object.getInt("setFAOn"));
+                                Integer y = x + 1;
+                                object.put("setFAOn", y);
+                                currentFAOffSet.setText((" ") + String.valueOf(object.getInt("setFAOn")));
+                                Toast.makeText(Activity2.this, "This Button is working " + y, Toast.LENGTH_SHORT).show();
+                            } else {
+                                //statusSwitch1 = switch1.getTextOff().toString();
+                                //object.put("tempOnOff", "Off");
+                                //object.put("index", 1);
+                                //Toast.makeText(Activity2.this, buttonPlus, Toast.LENGTH_LONG).show();
+                            }
+                            object.put("index", 2);
+                            object.saveInBackground();
+                            //Toast.makeText(Activity2.this, buttonPlus, Toast.LENGTH_LONG).show();
+
+                        }
+
+
+                    });
+
+                    buttonMinusFAOff.setOnClickListener(new View.OnClickListener() {
+                        @Override
+                        public void onClick(View view) {
+
+                            if (buttonMinusFAOff.isPressed()) {
+                                //clicked == true;
+                                Integer x = (object.getInt("setFAOn"));
+                                Integer y = x - 1;
+                                object.put("setFAOn", y);
+                                currentFAOffSet.setText((" ") + String.valueOf(object.getInt("setFAOn")));
+                                Toast.makeText(Activity2.this, "This Button is working " + y, Toast.LENGTH_SHORT).show();
+                            } else {
+                                //statusSwitch1 = switch1.getTextOff().toString();
+                                //object.put("tempOnOff", "Off");
+                                //object.put("index", 1);
+                                //Toast.makeText(Activity2.this, buttonPlus, Toast.LENGTH_LONG).show();
+                            }
+                            object.put("index", 2);
+                            object.saveInBackground();
+
+
+                        }
+
+                    });
+
+                    //####################### HUMIDITY ##############################
+
+                    currentHumidSet.setText((" ") + String.valueOf(object.getInt("setHumid")));
+                    int humidOnOff = object.getInt("humidOnOff");
+                    if (humidOnOff == 1) {
+                        switch7.setChecked(true);
+                    } else {
+                        switch7.setChecked(false);
+                    }
+
+                    switch7.setOnClickListener(new View.OnClickListener() {
+                        @Override
+                        public void onClick(View view) {
+
+                            String statusSwitch7;
+                            if (switch7.isChecked()) {
+                                statusSwitch7 = switch7.getTextOn().toString();
+                                object.put("humidOnOff", 1);
+                            } else {
+                                statusSwitch7 = switch7.getTextOff().toString();
+                                object.put("humidOnOff", 0);
+                            }
+                            object.put("index", 2);
+                            object.saveInBackground();
+                            Toast.makeText(Activity2.this, statusSwitch7, Toast.LENGTH_LONG).show();
+
+                        }
+
+
+                    });
+
+                    buttonPlusHumid.setOnClickListener(new View.OnClickListener() {
+                        @Override
+                        public void onClick(View view) {
+
+                            //String buttonPlus;
+                            if (buttonPlusHumid.isPressed()) {
+                                //clicked == true;
+                                Integer x = (object.getInt("setHumid"));
+                                Integer y = x + 1;
+                                object.put("setHumid", y);
+                                currentHumidSet.setText((" ") + String.valueOf(object.getInt("setHumid")));
+                                Toast.makeText(Activity2.this, "This Button is working " + y, Toast.LENGTH_SHORT).show();
+                            } else {
+                                //statusSwitch1 = switch1.getTextOff().toString();
+                                //object.put("tempOnOff", "Off");
+                                //object.put("index", 1);
+                                //Toast.makeText(Activity2.this, buttonPlus, Toast.LENGTH_LONG).show();
+                            }
+                            object.put("index", 2);
+                            object.saveInBackground();
+                            //Toast.makeText(Activity2.this, buttonPlus, Toast.LENGTH_LONG).show();
+
+                        }
+
+
+                    });
+
+                    buttonMinusHumid.setOnClickListener(new View.OnClickListener() {
+                        @Override
+                        public void onClick(View view) {
+
+                            if (buttonMinusHumid.isPressed()) {
+                                //clicked == true;
+                                Integer x = (object.getInt("setHumid"));
+                                Integer y = x - 1;
+                                object.put("setHumid", y);
+                                currentHumidSet.setText((" ") + String.valueOf(object.getInt("setHumid")));
+                                Toast.makeText(Activity2.this, "This Button is working " + y, Toast.LENGTH_SHORT).show();
+                            } else {
+                                //statusSwitch1 = switch1.getTextOff().toString();
+                                //object.put("tempOnOff", "Off");
+                                //object.put("index", 1);
+                                //Toast.makeText(Activity2.this, buttonPlus, Toast.LENGTH_LONG).show();
+                            }
+                            object.put("index", 2);
+                            object.saveInBackground();
+
+
+                        }
+
+                    });
+
+
+
+                }
+            }
+
+            });
+        }
+    }
+
+
+
+
+
+
+
+
+
